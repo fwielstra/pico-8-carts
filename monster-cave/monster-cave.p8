@@ -29,7 +29,7 @@ function _draw()
   draw_cookie()
   if (game_over) then
     print("game over!",44,44,7)
-    print("your score:"..player.score,34,54,7)
+    print("your score:"..flr(player.score),34,54,7)
     print("press ❎ to play again!",18,72,6)
   else
     print("score:"..flr(player.score).." speed:"..player.speed,2,2,7)
@@ -39,15 +39,19 @@ end
 -- player functions
 
 function make_player()
-  player={}
-  player.x=24			--position
-  player.y=60
-  player.dy=0   --fall speed
-  player.rise=4 --sprites
-  player.fall=6
-  player.dead=8
-  player.speed=2
-  player.score=0
+  player={
+    --position
+    x=24,
+    y=60,
+    --fall speed
+    dy=0,
+    --sprites
+    rise=4,
+    fall=6,
+    dead=8,
+    speed=2,
+    score=0
+  }
 end
 
 function draw_player()
