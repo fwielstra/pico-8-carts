@@ -30,6 +30,8 @@ function _init()
   x=p.x,
   y=p.y
  }
+ --target sprite, global for ease
+ tspr=0
 end
 
 function _update()
@@ -60,15 +62,15 @@ function _update()
  -- the player -did- move to
  -- the new location
  
- check_chest(tspr)
+ check_chest()
  --detect doors
- check_door(tspr)
- check_key(tspr)
- check_trapdoor(tspr)
+ check_door()
+ check_key()
+ check_trapdoor()
 	update_map()
 end
 
-function check_chest(tspr)
+function check_chest()
  if fget(tspr,1) then
   p.g+=100
   sfx(0)
@@ -76,7 +78,7 @@ function check_chest(tspr)
  end 
 end
 
-function check_door(tspr)
+function check_door()
  if tspr == s_door then
   --check key
   if haskey() then
@@ -92,7 +94,7 @@ function check_door(tspr)
  end
 end
 
-function check_key(tspr)
+function check_key()
  --detect key
  if tspr == s_key then
   add(p.i,s_key)
@@ -101,7 +103,7 @@ function check_key(tspr)
  end
 end
 
-function check_trapdoor(tspr)
+function check_trapdoor()
  --detect trap floor
  if fget(tspr,2) then
   sfx(4)
