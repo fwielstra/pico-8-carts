@@ -3,6 +3,7 @@ version 18
 __lua__
 -- adventure map demo / poc
 
+debug=""
 -- sprites
 s_grass=1
 s_door=5
@@ -46,29 +47,36 @@ function _update()
  nx=p.x+dx
  ny=p.y+dy
  
- --detect collidables
+ --target sprite
  tspr=mget(nx,ny)
+ --detect collidables
+ --& update player position
  if not fget(tspr,0) then
   p.x+=dx
   p.y+=dy
-  -- play movement sound
-  if dx!=0 or dy != 0 then
-   sfx(1)
-  end
  end
  
  -- all things below are when
  -- the player -did- move to
  -- the new location
  
- --detect chest
+ check_chest(tspr)
+ --detect doors
+ check_door(tspr)
+ check_key(tspr)
+ check_trapdoor(tspr)
+	update_map()
+end
+
+function check_chest(tspr)
  if fget(tspr,1) then
   p.g+=100
   sfx(0)
   mset(p.x,p.y,1)
- end
- 
- --detect doors
+ end 
+end
+
+function check_door(tspr)
  if tspr == s_door then
   --check key
   if haskey() then
@@ -82,14 +90,18 @@ function _update()
    sfx(3)
   end
  end
- 
+end
+
+function check_key(tspr)
  --detect key
  if tspr == s_key then
   add(p.i,s_key)
   sfx(0)
   mset(nx,ny,s_grass)
  end
- 
+end
+
+function check_trapdoor(tspr)
  --detect trap floor
  if fget(tspr,2) then
   sfx(4)
@@ -97,15 +109,17 @@ function _update()
   p.x=mstart.x
   p.y=mstart.y 
  end
- 
+end
+
+function update_map()
  --map transition
  local nmx=flr(p.x/16)
  local nmy=flr(p.y/16)
  if (m.x != nmx or m.y != nmy) then
   -- we are moving; record 
   -- players position on new map
-  m.x=flr(p.x/16)
-  m.y=flr(p.y/16)
+  m.x=nmx
+  m.y=nmy
   mstart={
    x=p.x,
    y=p.y
@@ -119,8 +133,8 @@ function _draw()
  map(m.x*16,m.y*16,0,0,48,16)
  --draw player relative to map
  spr(p.s,(p.x%16)*8,(p.y%16)*8)
- 
- draw_gui()
+
+ print(debug,0,0,7)
 end
 
 -- todo: i'm sure there's a 
@@ -131,12 +145,6 @@ function haskey()
   if (i==s_key) return true
  end
  return false
-end
--->8
---ui mgmt
-
-function draw_gui()
- 
 end
 __gfx__
 0000000033333b3349444944009999003333333355555555555555553333333366666676555dd555999999a90000000000000000000000000000000000000000
